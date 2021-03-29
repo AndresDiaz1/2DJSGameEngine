@@ -1,3 +1,4 @@
+import mockCanvasContext from '../../mocks/CanvasContext';
 import GEngineVertexBuffer from '../VertexBuffer/Engine_VertexBuffer';
 import GEngineCore from './Engine_Core';
 
@@ -14,7 +15,7 @@ describe('GEngineCore', () => {
   test('Should retrieve the canvas context', () => {
     HTMLCanvasElement.prototype.getContext = jest
       .fn()
-      .mockReturnValue('Canvas Context');
+      .mockReturnValue(mockCanvasContext);
     engine_Core.initializeWebGL('1');
     expect(document.getElementById).toBeCalledWith('1');
     expect(engineVertexBufferMock).toHaveBeenCalled();
@@ -34,5 +35,15 @@ describe('GEngineCore', () => {
       .mockReturnValue('Canvas Context');
     engine_Core.initializeWebGL('1');
     expect(engine_Core.getGl()).toBe('Canvas Context');
+  });
+
+  test('Should clearCanvas call clearColor and clear methods', () => {
+    HTMLCanvasElement.prototype.getContext = jest
+      .fn()
+      .mockReturnValue(mockCanvasContext);
+    engine_Core.initializeWebGL('1');
+    engine_Core.clearCanvas([1, 2, 3, 4]);
+    expect(mockCanvasContext.clearColor).toHaveBeenCalledWith(1, 2, 3, 4);
+    expect(mockCanvasContext.clear).toHaveBeenCalled();
   });
 });

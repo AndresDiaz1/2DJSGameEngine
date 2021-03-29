@@ -15,6 +15,8 @@ const mockCanvasContext = {
   getShaderInfoLog: jest.fn(),
   useProgram: jest.fn(),
   enableVertexAttribArray: jest.fn(),
+  clearColor: jest.fn(),
+  clear: jest.fn(),
 };
 
 export default mockCanvasContext;
