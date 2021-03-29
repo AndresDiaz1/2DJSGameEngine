@@ -1,4 +1,4 @@
-declare let gGl: WebGL2RenderingContext | null;
+declare let gGl: WebGL2RenderingContext;
 declare function initializeGL(): void;
-declare function clearCanvas(): void;
+declare function drawSquare(): void;
 declare function doGLDraw(): void;

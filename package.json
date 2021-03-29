@@ -26,6 +26,18 @@
   },
   "dependencies": {
     "@types/webgl2": "0.0.6",
+    "husky": "^6.0.0",
     "tslint-config-airbnb": "^5.11.2"
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx}": [
+      "eslint . --fix", "git add"
+    ],
+    "src/**/*.scss": [
+      "stylelint --syntax scss --fix", "git add"
+    ]
+  },
+  "husky": {
+    "pre-commit": "lint-staged"
   }
 }
