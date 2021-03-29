@@ -1,24 +1,23 @@
 import GEngineCore from './Engine_Core';
+import GEngineVertexBuffer from './Engine_VertexBuffer';
 
-const engine_Core = new GEngineCore({
-  VertexBuffer: {
-    initialize: () => console.log('Initialize'),
-  },
-});
-
+const engine_Core = new GEngineCore();
 document.getElementById = jest
   .fn()
   .mockReturnValue(document.createElement('CANVAS'));
 
+const engineVertexBufferMock = jest
+  .spyOn(GEngineVertexBuffer.prototype, 'initialize')
+  .mockImplementation(() => true);
+
 describe('GEngineCore', () => {
   test('Should retrieve the canvas context', () => {
-    const consoleLog = spyOn(console, 'log');
     HTMLCanvasElement.prototype.getContext = jest
       .fn()
       .mockReturnValue('Canvas Context');
     engine_Core.initializeWebGL('1');
     expect(document.getElementById).toBeCalledWith('1');
-    expect(consoleLog).toHaveBeenCalledWith('Initialize');
+    expect(engineVertexBufferMock).toHaveBeenCalled();
   });
 
   test('Should write No WebGL supported if can not retrieve canvas context', () => {
