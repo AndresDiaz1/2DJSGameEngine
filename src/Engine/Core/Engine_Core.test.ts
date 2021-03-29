@@ -1,5 +1,5 @@
+import GEngineVertexBuffer from '../VertexBuffer/Engine_VertexBuffer';
 import GEngineCore from './Engine_Core';
-import GEngineVertexBuffer from './Engine_VertexBuffer';
 
 const engine_Core = new GEngineCore();
 document.getElementById = jest

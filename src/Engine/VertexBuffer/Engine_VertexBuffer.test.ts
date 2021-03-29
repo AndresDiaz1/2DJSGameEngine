@@ -1,16 +1,10 @@
-import GEngineCore from './Engine_Core';
+import GEngineCore from '../Core/Engine_Core';
 import GEngineVertexBuffer from './Engine_VertexBuffer';
+import mockCanvasContext from '../../mocks/CanvasContext';
 
 const engine_Core = new GEngineCore();
-const engine_VertexBuffer = new GEngineVertexBuffer(engine_Core);
-const mockCanvasContext = {
-  createBuffer: jest.fn().mockReturnValue(true),
-  bindBuffer: jest.fn(),
-  bufferData: jest.fn(),
-};
-
 jest.spyOn(engine_Core, 'getGl').mockReturnValue(mockCanvasContext as any);
-
+const engine_VertexBuffer = new GEngineVertexBuffer(engine_Core.getGl() as any);
 describe('GEngineVertexBuffer', () => {
   test('Should initialize', () => {
     engine_VertexBuffer.initialize();

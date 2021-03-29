@@ -1,12 +1,12 @@
-import GEngineVertexBuffer from './Engine_VertexBuffer';
+import GEngineVertexBuffer from '../VertexBuffer/Engine_VertexBuffer';
 
 export default class GEngineCore {
   private mGl: WebGL2RenderingContext | null;
-  private gEngineVertexBuffer: GEngineVertexBuffer;
+  private gEngineVertexBuffer: GEngineVertexBuffer | null;
 
   constructor() {
     this.mGl = null;
-    this.gEngineVertexBuffer = new GEngineVertexBuffer(this);
+    this.gEngineVertexBuffer = null;
   }
 
   public getGl(): WebGL2RenderingContext | null {
@@ -21,6 +21,7 @@ export default class GEngineCore {
       document.write('<br><b>WebGL is not supported!</b>');
       return;
     }
+    this.gEngineVertexBuffer = new GEngineVertexBuffer(this.mGl);
     this.gEngineVertexBuffer.initialize();
   }
 
