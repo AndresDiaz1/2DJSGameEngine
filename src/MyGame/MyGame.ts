@@ -4,8 +4,8 @@ import EngineVertexBuffer from '../Engine/VertexBuffer/Engine_VertexBuffer.js';
 
 function MyGame(htmlCanvasID: string) {
   // Step A: Initialize the webGL Context and the VertexBuffer
-  const engineCore: EngineCore = EngineCore.getInstance(htmlCanvasID);
-  const vertexBuffer = EngineVertexBuffer.getInstance();
+  const engineCore: EngineCore = new EngineCore(htmlCanvasID);
+  const vertexBuffer = new EngineVertexBuffer();
   vertexBuffer.initialize();
 
   // Step B: Create, load and compile the shaders
@@ -21,7 +21,7 @@ function MyGame(htmlCanvasID: string) {
   // Step C2: Activate the proper shader
   shader.activateShader();
 
-  const canvasContext = engineCore.getCanvasContext() as WebGL2RenderingContext;
+  const canvasContext = EngineCore.getCanvasContext() as WebGL2RenderingContext;
   canvasContext.drawArrays(canvasContext.TRIANGLE_STRIP, 0, 4);
 }
 

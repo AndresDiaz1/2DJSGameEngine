@@ -7,7 +7,7 @@ export default class SimpleShader {
   private canvasContext: WebGL2RenderingContext;
 
   constructor(vertexShaderId: string, fragentShaderId: string) {
-    this.canvasContext = EngineCore.getInstance().getCanvasContext() as WebGL2RenderingContext;
+    this.canvasContext = EngineCore.getCanvasContext() as WebGL2RenderingContext;
 
     // Step A: load and compile vertex and fragment shaders
     const vertexShader = this.loadAndCompileShader(
@@ -47,7 +47,7 @@ export default class SimpleShader {
       this.compiledShader,
       'aSquareVertexPosition'
     );
-    const vertexBufferRef = EngineVertexBuffer.getInstance().getVertexRef();
+    const vertexBufferRef = EngineVertexBuffer.getVertexRef();
     // Step E: Activates the vertex buffer loaded in EngineCore_VertexBuffer.js
     this.canvasContext.bindBuffer(
       this.canvasContext.ARRAY_BUFFER,

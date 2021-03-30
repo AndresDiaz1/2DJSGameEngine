@@ -1,12 +1,11 @@
 import EngineCore from '../Core/Engine_Core.js';
 
 export default class EngineVertexBuffer {
-  static instance: EngineVertexBuffer;
   private vertexOfSquare: Array<number>;
-  private mSquareVertexBuffer: WebGLBuffer | null;
+  static mSquareVertexBuffer: WebGLBuffer | null;
 
-  private constructor() {
-    this.mSquareVertexBuffer = null;
+  constructor() {
+    EngineVertexBuffer.mSquareVertexBuffer = null;
     this.vertexOfSquare = [
       0.5,
       0.5,
@@ -23,22 +22,16 @@ export default class EngineVertexBuffer {
     ];
   }
 
-  public static getInstance(): EngineVertexBuffer {
-    if (!EngineVertexBuffer.instance)
-      EngineVertexBuffer.instance = new EngineVertexBuffer();
-    return EngineVertexBuffer.instance;
-  }
-
   public initialize() {
-    const canvasContext = EngineCore.getInstance().getCanvasContext() as WebGL2RenderingContext;
+    const canvasContext = EngineCore.getCanvasContext() as WebGL2RenderingContext;
 
     // Step A: Create a buffer on the gGL context for our vertex positions
-    this.mSquareVertexBuffer = canvasContext.createBuffer() as WebGLBuffer;
+    EngineVertexBuffer.mSquareVertexBuffer = canvasContext.createBuffer() as WebGLBuffer;
 
     // Step B: Activate vertexBuffer
     canvasContext.bindBuffer(
       canvasContext.ARRAY_BUFFER,
-      this.mSquareVertexBuffer
+      EngineVertexBuffer.mSquareVertexBuffer
     );
 
     // Step C: Loads verticesOfSquare into the vertexBuffer
@@ -49,7 +42,7 @@ export default class EngineVertexBuffer {
     );
   }
 
-  public getVertexRef() {
-    return this.mSquareVertexBuffer;
+  static getVertexRef() {
+    return EngineVertexBuffer.mSquareVertexBuffer;
   }
 }

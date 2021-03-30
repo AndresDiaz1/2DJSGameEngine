@@ -1,14 +1,16 @@
-import GEngineCore from '../Core/Engine_Core';
-import GEngineVertexBuffer from './Engine_VertexBuffer';
 import mockCanvasContext from '../../mocks/CanvasContext';
+import EngineCore from '../Core/Engine_Core';
+import EngineVertexBuffer from './Engine_VertexBuffer';
 
-const engine_Core = new GEngineCore();
-jest.spyOn(engine_Core, 'getGl').mockReturnValue(mockCanvasContext as any);
-const engine_VertexBuffer = new GEngineVertexBuffer(engine_Core.getGl() as any);
+jest
+  .spyOn(EngineCore, 'getCanvasContext')
+  .mockReturnValue(mockCanvasContext as any);
+const engine_VertexBuffer = new EngineVertexBuffer();
+
 describe('GEngineVertexBuffer', () => {
   test('Should initialize', () => {
     engine_VertexBuffer.initialize();
-    expect(engine_Core.getGl).toHaveBeenCalled();
+    expect(EngineCore.getCanvasContext).toHaveBeenCalled();
     expect(mockCanvasContext.createBuffer).toHaveBeenCalled();
     expect(mockCanvasContext.bindBuffer).toHaveBeenCalled();
     expect(mockCanvasContext.bufferData).toHaveBeenCalled();
@@ -16,6 +18,6 @@ describe('GEngineVertexBuffer', () => {
 
   test('Should getGLVertexRef return mSquareVertexBuffer', () => {
     engine_VertexBuffer.initialize();
-    expect(engine_VertexBuffer.getGLVertexRef()).toBe(true);
+    expect(EngineVertexBuffer.getVertexRef()).toBe(true);
   });
 });

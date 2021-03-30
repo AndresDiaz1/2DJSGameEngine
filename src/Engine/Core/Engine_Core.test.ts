@@ -1,30 +1,23 @@
 import mockCanvasContext from '../../mocks/CanvasContext';
-import GEngineVertexBuffer from '../VertexBuffer/Engine_VertexBuffer';
-import GEngineCore from './Engine_Core';
+import EngineCore from './Engine_Core';
 
-const engine_Core = new GEngineCore();
 document.getElementById = jest
   .fn()
   .mockReturnValue(document.createElement('CANVAS'));
 
-const engineVertexBufferMock = jest
-  .spyOn(GEngineVertexBuffer.prototype, 'initialize')
-  .mockImplementation(() => true);
-
-describe('GEngineCore', () => {
+describe('EngineCore', () => {
   test('Should retrieve the canvas context', () => {
     HTMLCanvasElement.prototype.getContext = jest
       .fn()
       .mockReturnValue(mockCanvasContext);
-    engine_Core.initializeWebGL('1');
-    expect(document.getElementById).toBeCalledWith('1');
-    expect(engineVertexBufferMock).toHaveBeenCalled();
+    new EngineCore('Canvas-ID');
+    expect(document.getElementById).toBeCalledWith('Canvas-ID');
   });
 
   test('Should write No WebGL supported if can not retrieve canvas context', () => {
     HTMLCanvasElement.prototype.getContext = jest.fn().mockReturnValue(null);
     const documentWrite = spyOn(document, 'write');
-    engine_Core.initializeWebGL('1');
+    new EngineCore('Canvas');
     expect(documentWrite).toHaveBeenCalledWith(
       '<br><b>WebGL is not supported!</b>'
     );
@@ -33,15 +26,15 @@ describe('GEngineCore', () => {
     HTMLCanvasElement.prototype.getContext = jest
       .fn()
       .mockReturnValue('Canvas Context');
-    engine_Core.initializeWebGL('1');
-    expect(engine_Core.getGl()).toBe('Canvas Context');
+    const engine_Core = new EngineCore('canvas');
+    expect(EngineCore.getCanvasContext()).toBe('Canvas Context');
   });
 
   test('Should clearCanvas call clearColor and clear methods', () => {
     HTMLCanvasElement.prototype.getContext = jest
       .fn()
       .mockReturnValue(mockCanvasContext);
-    engine_Core.initializeWebGL('1');
+    const engine_Core = new EngineCore('canvas');
     engine_Core.clearCanvas([1, 2, 3, 4]);
     expect(mockCanvasContext.clearColor).toHaveBeenCalledWith(1, 2, 3, 4);
     expect(mockCanvasContext.clear).toHaveBeenCalled();
