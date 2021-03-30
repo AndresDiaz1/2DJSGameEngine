@@ -1,10 +1,12 @@
-export default class GEngineVertexBuffer {
+import EngineCore from '../Core/Engine_Core.js';
+
+export default class EngineVertexBuffer {
+  static instance: EngineVertexBuffer;
   private vertexOfSquare: Array<number>;
-  private gl: WebGL2RenderingContext;
   private mSquareVertexBuffer: WebGLBuffer | null;
 
-  constructor(gl: WebGL2RenderingContext) {
-    // First: define the vertices for a square
+  private constructor() {
+    this.mSquareVertexBuffer = null;
     this.vertexOfSquare = [
       0.5,
       0.5,
@@ -19,27 +21,35 @@ export default class GEngineVertexBuffer {
       -0.5,
       0.0,
     ];
-    this.gl = gl;
-    this.mSquareVertexBuffer = null;
   }
 
-  public getGLVertexRef() {
-    // reference to the vertex positions for the square in the gl context
-    return this.mSquareVertexBuffer;
+  public static getInstance(): EngineVertexBuffer {
+    if (!EngineVertexBuffer.instance)
+      EngineVertexBuffer.instance = new EngineVertexBuffer();
+    return EngineVertexBuffer.instance;
   }
 
   public initialize() {
+    const canvasContext = EngineCore.getInstance().getCanvasContext() as WebGL2RenderingContext;
+
     // Step A: Create a buffer on the gGL context for our vertex positions
-    this.mSquareVertexBuffer = this.gl.createBuffer() as WebGLBuffer;
+    this.mSquareVertexBuffer = canvasContext.createBuffer() as WebGLBuffer;
 
     // Step B: Activate vertexBuffer
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.mSquareVertexBuffer);
+    canvasContext.bindBuffer(
+      canvasContext.ARRAY_BUFFER,
+      this.mSquareVertexBuffer
+    );
 
     // Step C: Loads verticesOfSquare into the vertexBuffer
-    this.gl.bufferData(
-      this.gl.ARRAY_BUFFER,
+    canvasContext.bufferData(
+      canvasContext.ARRAY_BUFFER,
       new Float32Array(this.vertexOfSquare),
-      this.gl.STATIC_DRAW
+      canvasContext.STATIC_DRAW
     );
+  }
+
+  public getVertexRef() {
+    return this.mSquareVertexBuffer;
   }
 }

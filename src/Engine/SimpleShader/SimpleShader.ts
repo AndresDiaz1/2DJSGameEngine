@@ -1,75 +1,115 @@
-import GEngineVertexBuffer from '../VertexBuffer/Engine_VertexBuffer';
+import EngineCore from '../Core/Engine_Core.js';
+import EngineVertexBuffer from '../VertexBuffer/Engine_VertexBuffer.js';
 
 export default class SimpleShader {
-  private mCompiledShader: WebGLProgram;
-  private mShaderVertexPositionAttribute;
-  private gl: WebGL2RenderingContext;
+  private compiledShader: WebGLProgram;
+  private shaderVertexPositionAttribute;
+  private canvasContext: WebGL2RenderingContext;
 
-  constructor(
-    gl: WebGL2RenderingContext,
-    vertexShaderId: string,
-    fragentShaderId: string
-  ) {
-    this.gl = gl;
+  constructor(vertexShaderId: string, fragentShaderId: string) {
+    this.canvasContext = EngineCore.getInstance().getCanvasContext() as WebGL2RenderingContext;
 
     // Step A: load and compile vertex and fragment shaders
-    const vertexShader: WebGLShader = this.loadAndCompileShader(
+    const vertexShader = this.loadAndCompileShader(
       vertexShaderId,
-      this.gl.VERTEX_SHADER
+      this.canvasContext.VERTEX_SHADER
     );
-    const fragmentShader: WebGLShader = this.loadAndCompileShader(
+    const fragmentShader = this.loadAndCompileShader(
       fragentShaderId,
-      this.gl.VERTEX_SHADER
+      this.canvasContext.FRAGMENT_SHADER
     );
 
     // Step B: Create and link the shaders into a program.
-    this.mCompiledShader = this.gl.createProgram() as WebGLProgram;
-    this.gl.attachShader(this.mCompiledShader, vertexShader);
-    this.gl.attachShader(this.mCompiledShader, fragmentShader);
-    this.gl.linkProgram(this.mCompiledShader);
+    this.compiledShader = this.canvasContext.createProgram() as WebGLProgram;
+    this.canvasContext.attachShader(
+      this.compiledShader,
+      vertexShader as WebGLShader
+    );
+    this.canvasContext.attachShader(
+      this.compiledShader,
+      fragmentShader as WebGLShader
+    );
+
+    this.canvasContext.linkProgram(this.compiledShader);
 
     // Step C: check for error
-    if (!this.gl.getProgramParameter(this.mCompiledShader, this.gl.LINK_STATUS))
+    if (
+      !this.canvasContext.getProgramParameter(
+        this.compiledShader,
+        this.canvasContext.LINK_STATUS
+      )
+    ) {
       alert('Error linking shader');
+    }
 
-    // Step D: Gets a reference to the aSquareVertexPosition attribute
-    this.mShaderVertexPositionAttribute = this.gl.getAttribLocation(
-      this.mCompiledShader,
+    // Step D: Gets a reference to the aSquareVertexPosition attribute within the shaders.
+    this.shaderVertexPositionAttribute = this.canvasContext.getAttribLocation(
+      this.compiledShader,
       'aSquareVertexPosition'
     );
-    // Step E: Activates the vertex buffer loaded in Engine.Core_VertexBuffer
-    const vertexBuffer = new GEngineVertexBuffer(this.gl);
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer.getGLVertexRef());
+    const vertexBufferRef = EngineVertexBuffer.getInstance().getVertexRef();
+    // Step E: Activates the vertex buffer loaded in EngineCore_VertexBuffer.js
+    this.canvasContext.bindBuffer(
+      this.canvasContext.ARRAY_BUFFER,
+      vertexBufferRef
+    );
 
     // Step F: Describe the characteristic of the vertex position attribute
-    this.gl.vertexAttribPointer(
-      this.mShaderVertexPositionAttribute,
+    this.canvasContext.vertexAttribPointer(
+      this.shaderVertexPositionAttribute,
       3, // each element is a 3-float (x,y.z)
-      this.gl.FLOAT, // data type is FLOAT
+      this.canvasContext.FLOAT, // data type is FLOAT
       false, // if the content is normalized vectors
       0, // number of bytes to skip in between elements
-      0 // offsets to the first element
-    );
+      0
+    ); // offsets to the first element
   }
 
-  private loadAndCompileShader(id: string, shaderType: number): WebGLShader {
+  private loadAndCompileShader(
+    filePath: string,
+    shaderType: number
+  ): WebGLShader | null {
     // Step A: Get the shader source from index.html
-    const shaderText = document.getElementById(id);
-    const shaderSource = shaderText?.firstChild?.textContent as string;
+    const xmlReq = new XMLHttpRequest();
+    xmlReq.open('GET', filePath, false);
+    try {
+      xmlReq.send();
+    } catch (error) {
+      alert(
+        'Failed to load shader: ' +
+          filePath +
+          ' [Hint: you cannot double click index.html to run this project. ' +
+          'The index.html file must be loaded by a web-server.]'
+      );
+      return null;
+    }
+    const shaderSource = xmlReq.responseText;
+
+    if (shaderSource === null) {
+      alert('WARNING: Loading of:' + filePath + ' Failed!');
+      return null;
+    }
 
     // Step B: Create the shader based on the shader type: vertex or fragment
-    const compiledShader = this.gl.createShader(shaderType) as WebGLShader;
+    const compiledShader = this.canvasContext.createShader(
+      shaderType
+    ) as WebGLShader;
 
     // Step C: Compile the created shader
-    this.gl.shaderSource(compiledShader, shaderSource);
-    this.gl.compileShader(compiledShader);
+    this.canvasContext.shaderSource(compiledShader, shaderSource);
+    this.canvasContext.compileShader(compiledShader);
 
     // Step D: check for errors and return results (null if error)
     // The log info is how shader compilation errors are typically displayed.
     // This is useful for debugging the shaders.
-    if (!this.gl.getShaderParameter(compiledShader, this.gl.COMPILE_STATUS)) {
+    if (
+      !this.canvasContext.getShaderParameter(
+        compiledShader,
+        this.canvasContext.COMPILE_STATUS
+      )
+    ) {
       alert(
-        `A shader compiling error ocurred: ${this.gl.getShaderInfoLog(
+        `A shader compiling error ocurred: ${this.canvasContext.getShaderInfoLog(
           compiledShader
         )}`
       );
@@ -78,11 +118,13 @@ export default class SimpleShader {
   }
 
   activateShader() {
-    this.gl.useProgram(this.mCompiledShader);
-    this.gl.enableVertexAttribArray(this.mShaderVertexPositionAttribute);
+    this.canvasContext.useProgram(this.compiledShader);
+    this.canvasContext.enableVertexAttribArray(
+      this.shaderVertexPositionAttribute
+    );
   }
 
-  getShader() {
-    return this.mCompiledShader;
+  getShader(): WebGLProgram {
+    return this.compiledShader;
   }
 }
