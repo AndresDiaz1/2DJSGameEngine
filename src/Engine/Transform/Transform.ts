@@ -1,4 +1,4 @@
-import { mat4, vec2, vec3 } from "gl-matrix";
+import { mat4, vec2, vec3 } from 'gl-matrix';
 
 export default class Transform {
 	private position: vec2;
@@ -16,7 +16,7 @@ export default class Transform {
 		(this.xPos = 0), (this.yPos = 0), (this.width = 0), (this.height = 0);
 	}
 
-	public setXYPosition(xPos: number, yPos: number) {
+	public setXYPosition(xPos: number, yPos: number): void {
 		this.xPos = xPos;
 		this.yPos = yPos;
 	}
@@ -29,7 +29,7 @@ export default class Transform {
 		return this.yPos;
 	}
 
-	public setPosition(position: vec2) {
+	public setPosition(position: vec2): void {
 		this.position = position;
 	}
 
@@ -37,7 +37,7 @@ export default class Transform {
 		return this.position;
 	}
 
-	public setWidthHeightSize(width: number, height: number) {
+	public setWidthHeightSize(width: number, height: number): void {
 		this.width = width;
 		this.height = height;
 	}
@@ -50,7 +50,7 @@ export default class Transform {
 		return this.height;
 	}
 
-	public setScale(scale: vec2) {
+	public setScale(scale: vec2): void {
 		this.scale = scale;
 	}
 
@@ -58,14 +58,14 @@ export default class Transform {
 		return this.scale;
 	}
 
-	public setRotationInRad(rotation: number) {
+	public setRotationInRad(rotation: number): void {
 		this.rotation = rotation;
 		while (this.rotation > 2 * Math.PI) {
 			this.rotation -= 2 * Math.PI;
 		}
 	}
 
-	public setRotationInDegrees(rotation: number) {
+	public setRotationInDegrees(rotation: number): void {
 		this.setRotationInRad((rotation * Math.PI) / 180.0);
 	}
 
