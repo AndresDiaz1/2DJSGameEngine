@@ -41,6 +41,7 @@
 		"webpack-dev-server": "^3.10.3"
 	},
 	"dependencies": {
+		"gl-matrix": "^3.3.0",
 		"normalize.css": "^8.0.1"
 	},
 	"husky": {

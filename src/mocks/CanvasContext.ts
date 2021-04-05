@@ -20,6 +20,7 @@ const mockCanvasContext = {
 	getUniformLocation: jest.fn(),
 	uniform4fv: jest.fn(),
 	drawArrays: jest.fn(),
+	uniformMatrix4fv: jest.fn(),
 };
 
 export default mockCanvasContext;

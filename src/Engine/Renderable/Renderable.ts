@@ -10,9 +10,10 @@ export default class Renderable {
 		this.color = [1, 1, 1, 1];
 	}
 
-	public draw(): void {
+	public draw(modelTransform: Float32List): void {
 		const canvasContext = EngineCore.getCanvasContext() as WebGL2RenderingContext;
 		this.shader.activateShader(this.color);
+		this.shader.loadObjectTransform(modelTransform);
 		canvasContext.drawArrays(canvasContext.TRIANGLE_STRIP, 0, 4);
 	}
 

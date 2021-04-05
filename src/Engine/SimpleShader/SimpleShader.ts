@@ -6,10 +6,12 @@ export default class SimpleShader {
 	private shaderVertexPositionAttribute;
 	private canvasContext: WebGL2RenderingContext;
 	private pixelColor: WebGLUniformLocation | null;
+	private modelTransform: WebGLUniformLocation | null;
 
 	constructor(vertexShaderId: string, fragentShaderId: string) {
 		this.canvasContext = EngineCore.getCanvasContext() as WebGL2RenderingContext;
 		this.pixelColor = null;
+		this.modelTransform = null;
 		// Step A: load and compile vertex and fragment shaders
 		const vertexShader = this.loadAndCompileShader(
 			vertexShaderId,
@@ -70,6 +72,11 @@ export default class SimpleShader {
 			this.compiledShader,
 			'uPixelColor'
 		) as WebGLUniformLocation;
+
+		this.modelTransform = this.canvasContext.getUniformLocation(
+			this.compiledShader,
+			'uModelTransform'
+		);
 	}
 
 	private loadAndCompileShader(
@@ -134,5 +141,13 @@ export default class SimpleShader {
 
 	getShader(): WebGLProgram {
 		return this.compiledShader;
+	}
+
+	public loadObjectTransform(modelTransform: Float32List): void {
+		this.canvasContext.uniformMatrix4fv(
+			this.modelTransform,
+			false,
+			modelTransform
+		);
 	}
 }
