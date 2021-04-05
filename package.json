@@ -45,8 +45,7 @@
 	},
 	"husky": {
 		"hooks": {
-			"pre-commit": "npm run lint",
-			"pre-push": "npm run coverage && npm run build"
+			"pre-commit": "npm run lint"
 		}
 	},
 	"license": "MIT",
