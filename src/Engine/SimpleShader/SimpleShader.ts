@@ -1,5 +1,5 @@
-import EngineCore from '../Core/EngineCore';
-import EngineVertexBuffer from '../VertexBuffer/VertexBuffer';
+import EngineCore from "../Core/EngineCore";
+import EngineVertexBuffer from "../VertexBuffer/VertexBuffer";
 
 export default class SimpleShader {
 	private compiledShader: WebGLProgram;
@@ -7,6 +7,7 @@ export default class SimpleShader {
 	private canvasContext: WebGL2RenderingContext;
 	private pixelColor: WebGLUniformLocation | null;
 	private modelTransform: WebGLUniformLocation | null;
+	private viewProjTransform: WebGLUniformLocation | null;
 
 	constructor(vertexShaderId: string, fragentShaderId: string) {
 		this.canvasContext = EngineCore.getCanvasContext() as WebGL2RenderingContext;
@@ -42,13 +43,13 @@ export default class SimpleShader {
 				this.canvasContext.LINK_STATUS
 			)
 		) {
-			alert('Error linking shader');
+			alert("Error linking shader");
 		}
 
 		// Step D: Gets a reference to the aSquareVertexPosition attribute within the shaders.
 		this.shaderVertexPositionAttribute = this.canvasContext.getAttribLocation(
 			this.compiledShader,
-			'aSquareVertexPosition'
+			"aSquareVertexPosition"
 		);
 		const vertexBufferRef = EngineVertexBuffer.getVertexRef();
 		// Step E: Activates the vertex buffer loaded in EngineCore_VertexBuffer.js
@@ -70,12 +71,17 @@ export default class SimpleShader {
 		// Step G: Gets a reference to the uniform variable uPixelColor in the fragment shader
 		this.pixelColor = this.canvasContext.getUniformLocation(
 			this.compiledShader,
-			'uPixelColor'
+			"uPixelColor"
 		) as WebGLUniformLocation;
 
 		this.modelTransform = this.canvasContext.getUniformLocation(
 			this.compiledShader,
-			'uModelTransform'
+			"uModelTransform"
+		);
+
+		this.viewProjTransform = this.canvasContext.getUniformLocation(
+			this.compiledShader,
+			"uViewProjTransform"
 		);
 	}
 
@@ -85,22 +91,22 @@ export default class SimpleShader {
 	): WebGLShader | null {
 		// Step A: Get the shader source from index.html
 		const xmlReq = new XMLHttpRequest();
-		xmlReq.open('GET', filePath, false);
+		xmlReq.open("GET", filePath, false);
 		try {
 			xmlReq.send();
 		} catch (error) {
 			alert(
-				'Failed to load shader: ' +
+				"Failed to load shader: " +
 					filePath +
-					' [Hint: you cannot double click index.html to run this project. ' +
-					'The index.html file must be loaded by a web-server.]'
+					" [Hint: you cannot double click index.html to run this project. " +
+					"The index.html file must be loaded by a web-server.]"
 			);
 			return null;
 		}
 		const shaderSource = xmlReq.responseText;
 
 		if (shaderSource === null) {
-			alert('WARNING: Loading of:' + filePath + ' Failed!');
+			alert("WARNING: Loading of:" + filePath + " Failed!");
 			return null;
 		}
 
@@ -131,8 +137,13 @@ export default class SimpleShader {
 		return compiledShader;
 	}
 
-	activateShader(pixelColor: number[]): void {
+	activateShader(pixelColor: number[], vpMatrix: Float32List): void {
 		this.canvasContext.useProgram(this.compiledShader);
+		this.canvasContext.uniformMatrix4fv(
+			this.viewProjTransform,
+			false,
+			vpMatrix
+		);
 		this.canvasContext.enableVertexAttribArray(
 			this.shaderVertexPositionAttribute
 		);

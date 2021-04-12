@@ -1,4 +1,4 @@
-import { mat4, vec2, vec3 } from 'gl-matrix';
+import { mat4, vec2, vec3 } from "gl-matrix";
 
 export default class Transform {
 	private position: vec2;
@@ -13,7 +13,7 @@ export default class Transform {
 		this.position = vec2.fromValues(0, 0);
 		this.scale = vec2.fromValues(1, 1);
 		this.rotation = 0.0;
-		(this.xPos = 0), (this.yPos = 0), (this.width = 0), (this.height = 0);
+		(this.xPos = 0), (this.yPos = 0), (this.width = 1), (this.height = 1);
 	}
 
 	public setXYPosition(xPos: number, yPos: number): void {

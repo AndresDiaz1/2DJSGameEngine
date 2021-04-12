@@ -1,3 +1,4 @@
+import { mat4 } from "gl-matrix";
 import mockCanvasContext from "../../mocks/CanvasContext";
 import EngineCore from "../Core/EngineCore";
 import SimpleShader from "../SimpleShader/SimpleShader";
@@ -19,7 +20,7 @@ describe("Renderable", () => {
 		const mockDrawArrays = jest.spyOn(mockCanvasContext, "drawArrays");
 		const shader = new SimpleShader("1", "1");
 		const renderable = new Renderable(shader);
-		renderable.draw();
+		renderable.draw(mat4.create());
 		expect(mockDrawArrays).toHaveBeenCalled();
 	});
 	test("Should get and set color", () => {

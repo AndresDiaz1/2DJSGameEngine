@@ -1,6 +1,6 @@
-import EngineCore from '../Core/EngineCore';
-import SimpleShader from '../SimpleShader/SimpleShader';
-import Transform from '../Transform/Transform';
+import EngineCore from "../Core/EngineCore";
+import SimpleShader from "../SimpleShader/SimpleShader";
+import Transform from "../Transform/Transform";
 
 export default class Renderable {
 	private shader: SimpleShader;
@@ -13,9 +13,9 @@ export default class Renderable {
 		this.xForm = new Transform();
 	}
 
-	public draw(): void {
+	public draw(vpMatrix: Float32List): void {
 		const canvasContext = EngineCore.getCanvasContext() as WebGL2RenderingContext;
-		this.shader.activateShader(this.color);
+		this.shader.activateShader(this.color, vpMatrix);
 		// always activate the shader first!
 		this.shader.loadObjectTransform(this.xForm.getXForm());
 		canvasContext.drawArrays(canvasContext.TRIANGLE_STRIP, 0, 4);

@@ -46,7 +46,7 @@ describe("SimpleShader", () => {
 	test("Should activateShader call useProgram and enableVertexAttribArray from canvas context", () => {
 		mockCanvasContext.getProgramParameter = jest.fn().mockReturnValue(true);
 		const simpleShader = new SimpleShader("1", "1");
-		simpleShader.activateShader([0, 0, 1, 1]);
+		simpleShader.activateShader([0, 0, 1, 1], mat4.create());
 		expect(mockCanvasContext.useProgram).toHaveBeenCalledWith(
 			simpleShader.getShader()
 		);
