@@ -1,4 +1,6 @@
 import { mat4, vec2 } from "gl-matrix";
+import mockCanvasContext from "../../mocks/CanvasContext";
+import EngineCore from "../Core/EngineCore";
 import Camera from "./Camera";
 
 const camera = new Camera(
@@ -7,28 +9,32 @@ const camera = new Camera(
 	[20, 40, 600, 300] // viewport (orgX, orgY, width, height)
 );
 
+jest
+	.spyOn(EngineCore, "getCanvasContext")
+	.mockReturnValue(mockCanvasContext as any);
+
 describe("Camera", () => {
-	test("set and get WCCenter", () => {
+	test("Should set and get WCCenter", () => {
 		camera.setWCCenter(10, 20);
 		expect(camera.getWCCenter().toString()).toStrictEqual("10,20");
 	});
 
-	test("set and get WCWidth", () => {
+	test("Should set and get WCWidth", () => {
 		camera.setWCWidth(10);
 		expect(camera.getWCWidth()).toBe(10);
 	});
 
-	test("set and get ViewPort", () => {
+	test("Should set and get ViewPort", () => {
 		camera.setViewPort([1, 2, 3, 4]);
 		expect(camera.getViewPort().toString()).toStrictEqual("1,2,3,4");
 	});
 
-	test("set and get BackgroundColor", () => {
+	test("Should set and get BackgroundColor", () => {
 		camera.setBackgroundColor([1, 0, 0, 1]);
 		expect(camera.getBackgroundColor().toString()).toStrictEqual("1,0,0,1");
 	});
 
-	test("set and get VPMatrix", () => {
+	test("Should set and get VPMatrix", () => {
 		const vpMatrix = mat4.lookAt(
 			mat4.create(),
 			[1, 2, 10],
@@ -37,5 +43,11 @@ describe("Camera", () => {
 		);
 		camera.setVPMatrix(vpMatrix);
 		expect(camera.getVPMatrix().toString()).toStrictEqual(vpMatrix.toString());
+	});
+
+	test("Should setupViewProjection multiply to create the view projection matrix", () => {
+		const spyMat4Multiply = jest.spyOn(mat4, "multiply");
+		camera.setupViewProjection();
+		expect(spyMat4Multiply).toHaveBeenCalled();
 	});
 });

@@ -21,6 +21,10 @@ const mockCanvasContext = {
 	uniform4fv: jest.fn(),
 	drawArrays: jest.fn(),
 	uniformMatrix4fv: jest.fn(),
+	viewport: jest.fn(),
+	scissor: jest.fn(),
+	enable: jest.fn(),
+	disable: jest.fn(),
 };
 
 export default mockCanvasContext;

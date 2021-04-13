@@ -1,9 +1,9 @@
-import Renderable from "../Engine/Renderable/Renderable";
-import EngineCore from "../Engine/Core/EngineCore";
-import SimpleShader from "../Engine/SimpleShader/SimpleShader";
-import EngineVertexBuffer from "../Engine/VertexBuffer/VertexBuffer";
-import { vec2 } from "gl-matrix";
-import Camera from "../Engine/Camera/Camera";
+import Renderable from '../Engine/Renderable/Renderable';
+import EngineCore from '../Engine/Core/EngineCore';
+import SimpleShader from '../Engine/SimpleShader/SimpleShader';
+import EngineVertexBuffer from '../Engine/VertexBuffer/VertexBuffer';
+import { vec2 } from 'gl-matrix';
+import Camera from '../Engine/Camera/Camera';
 
 export default function MyGame(htmlCanvasID: string): void {
 	// Step A: Initialize the webGL Context and the VertexBuffer
@@ -20,8 +20,8 @@ export default function MyGame(htmlCanvasID: string): void {
 
 	// Step C: Create, load and compile the shaders
 	const shader = new SimpleShader(
-		"src/GLSLShaders/SimpleVS.glsl",
-		"src/GLSLShaders/SimpleFS.glsl"
+		'src/GLSLShaders/SimpleVS.glsl',
+		'src/GLSLShaders/SimpleFS.glsl'
 	);
 
 	// Step D: Create the Renderable objects:

@@ -1,10 +1,10 @@
-import { mat4, vec2 } from "gl-matrix";
-import EngineCore from "../Core/EngineCore";
+import { mat4, vec2 } from 'gl-matrix';
+import EngineCore from '../Core/EngineCore';
 
 export default class Camera {
 	private WCCenter: vec2;
-	private WCWidth;
-	private viewport;
+	private WCWidth: number;
+	private viewport: number[];
 	private nearPlane: number;
 	private farPlane: number;
 	private viewMatrix: mat4;
@@ -12,7 +12,7 @@ export default class Camera {
 	private vpMatrix: mat4;
 	private backGroundColor: number[];
 
-	constructor(WCCenter, WCWidth, viewportArray) {
+	constructor(WCCenter: vec2, WCWidth: number, viewportArray: number[]) {
 		this.WCCenter = WCCenter;
 		this.WCWidth = WCWidth;
 		this.viewport = viewportArray; // [x, y, width, height]
